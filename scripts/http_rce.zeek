@@ -1,7 +1,7 @@
 ##! Detect HTTP Remote Code Execution attempts.
 
-# Thoughts on how to improve this
-# Extract the URL, domain, or host used in the RCE for use in threat intelligence. 
+# Possible future direction on how to improve this script:
+    # Extract the URL, domain, or host used in the RCE for use in threat intelligence. 
 
 module HTTP_RCE;
 
@@ -19,10 +19,9 @@ export {
     };
 
     redef enum HTTP::Tags += {
-        ## Indicator of a URI based RCE attack.
+        ## Indicator of a URI-based RCE attack.
         URI_RCE,
-        ## Indicator of client body based RCE attack.  This is
-        ## typically the body content of a POST request. Not implemented yet.
+        ## Indicator of client post body-based RCE attack. 
         POST_RCE,
         ## Indicator of a cookie based RCE attack. Not implemented yet.
         COOKIE_RCE,
@@ -31,8 +30,8 @@ export {
 																																		 
 															
 
-    ## The threshold and interval may seem high, but from what has been observed attempts sporadically happen over a long period of time.
-    ## I am unsure what impact this may have on Zeek though.
+    ## The interval may seem high and threshold low, but from what has been observed attempts can sporadically happen over a long period of time.
+    ## Unsure what impact this may have on Zeek though.
 
     ## Defines the threshold that determines if an RCE attack
     ## is ongoing based on the number of requests that appear to be
@@ -44,25 +43,26 @@ export {
     ## At the end of each interval the counter is reset.
     const rce_requests_interval = 120min &redef;
 
-    ## Collecting samples will add extra data to notice
-    ## by collecting some sample RCE url paths.  Disable
-    ## sample collection by setting this value to 0.
+    ## Collecting samples will add extra data to the notice.
+    ## Disable sample collection by setting this value to 0.
     const collect_RCE_samples = 3 &redef;
 
-    ## Regular expression is used to match URI and post_body based RCEs.
+    ## A regular expression is used to match RCEs.
     ## Currently these are geared toward PHP.
     ## Need to look at including C# and Java more.
-    ## Future things to think about:
-																												
-    ## Create a confidence index or scoring system. If we see <?php that's higher confidence than a semi-colon or 1337.
-    ## The plus + symbol represents a whitespace character. One technique observed is using a lot of whitespace characters, ie +++++++++++++++++++++++++eval++++++++++++++++++++(
-    ## Not sure on the "unsafe", "curl" regex entries below yet. Need to make it more specific to avoid false positives.
+
+
 
 
     ## The idea with the included regex below is to focus on patterns that will almost always accompany an RCE.
     ## There are a many ways to obfuscate and many vulnerabilities to exploit.
-    ## Only a handful of functions that can be used to begin the deobfuscating process and run the code. Keeps this simple.																																							   
-																											
+    ## Only a handful of functions that can be used to begin the deobfuscating process and run the code. Keeps this simple.
+
+    ## Future things to think about:
+    ## Create a confidence index or scoring system. If we see <?php that's higher confidence than a semi-colon or just the number 1337.
+    ## The plus + symbol represents a whitespace character. One technique observed is using a lot of whitespace characters, ie +++++++++++++++++++++++++eval++++++++++++++++++++(
+        ## We have not tested the current regex against this type of pattern.
+
     const match_rce_pattern =
 
     /(eval[[:space:]]*\+*\()/i |
@@ -88,11 +88,11 @@ export {
     /(PHP Obfuscator)/ |
     # /(\?\>)/ | Legitimate XML Ending
     # /(\%\>)/ | Too many false positives.
-    /(curl[[:space:]]+)/i | # Need to make this more specific. # Example: [#markup]=curl%20https:// #Could look for a domain, IP, or protocol afterwards.
+    /(curl[[:space:]]+)/i | # This produces many false positives. Need to make this more specific. # Example: [#markup]=curl%20https:// . Perhaps look for an accompanying domain, IP, or protocol afterwards?
     /(curl_init[[:space:]]*\()/i |
     /(wget[[:space:]]+)/i | # Need to make this more specific. # Example: [#markup]=wget -qO - http://
     #/(shell)/i | # Need to make this more specific. powershell? or shell.<extension> such as shell.php. Too many false positives with just "shell"
-    #/(unsafe)/i # Need to make this more specific. 
+    #/(unsafe)/i # Need to make this more specific. Too many false positives. 
 
     # Functions that are candidates to be included, but disabled due to needing more data.
     #str_rot13 #Example: base64_decode(str_rot13(strrev('=Nj/8C+2NKkj8L
@@ -169,19 +169,15 @@ event zeek_init()
 event http_request(c: connection, method: string, original_URI: string,
            unescaped_URI: string, version: string)
 {
-
-    #If RCE attempt is found, we want to tag the HTTP log and increment sumstats
+    # Efficiency technique. RCE attempts against the local nets are more risky.
     if(c$id$resp_h in Site::local_nets)
     {
+        # If RCE attempt is found, we want to tag the HTTP log and increment sumstats
         if ( match_rce_pattern in unescaped_URI )
-										   
         {
-													 
-			 
             add c$http$tags[URI_RCE];
             SumStats::observe("http.rce.attacker", [$host=c$id$orig_h], [$str=original_URI]);
             SumStats::observe("http.rce.victim",   [$host=c$id$resp_h], [$str=original_URI]);
-			 
         }
     }
 }
@@ -190,11 +186,12 @@ event http_reply(c: connection, version: string, code: count, reason: string)
     # Efficiency technique. RCE attempts against the local nets are more risky.
     if(c$id$resp_h in Site::local_nets)
     {
+        # Admins should already have a post_body script installed and running.
+        # The post_body field should already be written to the log at this point.
+        # For efficiency sake, we use an existing field so Zeek only processes the packets once.
+        # Typically the first 1024 bytes should be sufficient to detect most RCE attempts, although we don't have solid stats to back up that intuition claim.
         if (c$http?$post_body)
         {
-            # The post_body field should already be written to the log at this point. We use the log so that
-            # the we only process the packets once (by the post_body script). By default, the post_body script writes out 
-            # the first 1024 bytes which is sufficient to detect most RCE attempts.
             if ( match_rce_pattern in c$http$post_body )
             {
                 add c$http$tags[POST_RCE];
