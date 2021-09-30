@@ -53,4 +53,4 @@ Type: Threat Hunting
 
 ## About
 
-Written by @forewarned and @nturley3.
+Written by [@forewarned](https://github.com/forewarned) and [@nturley3](https://github.com/nturley3).
