@@ -88,9 +88,9 @@ export {
     /(PHP Obfuscator)/ |
     # /(\?\>)/ | Too many false positives. Legitimate XML Ending
     # /(\%\>)/ | Too many false positives.
-    /(curl[[:space:]]+).*?((-o)|(--output))|(\>)/i | # Example: [#markup]=curl%20https:// . Look for some type of file write.
-    /(curl_init[[:space:]]*\()/i |
-    /(wget[[:space:]]+)/i | # Need to make this more specific. # Example: [#markup]=wget -qO - http://
+    /(curl[[:space:]]+?\++?).*?((-o)|(--output))|(\>)/i | # Example: [#markup]=curl%20https:// . Look for some type of file write.
+    /(curl_init[[:space:]]*?\+*?\()/i |
+    /(wget[[:space:]]+\++?)/i  # Need to make this more specific. # Example: [#markup]=wget -qO - http://
     #/(shell)/i | # Need to make this more specific. powershell? or shell.<extension> such as shell.php. Too many false positives with just "shell"
     #/(unsafe)/i # Need to make this more specific. Too many false positives. 
 
