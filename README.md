@@ -26,6 +26,8 @@ See the [Zeek Package Manager Docs](https://docs.zeek.org/projects/package-manag
 
 No additional Zeek configuration is necessary for this module.
 
+A script logging the HTTP post body is required for examining post body data. A popular one is [Corelight's post_body script](https://github.com/corelight/log-add-http-post-bodies).
+
 ## Generated Outputs
 
 This package adds a tag to the HTTP log:
@@ -33,7 +35,7 @@ This package adds a tag to the HTTP log:
 | `tags` Field Value | Description |
 | ----- | ----- |
 | HTTP_RCE::URI_RCE | Identifies possible RCE attempts in the URI. |
-| HTTP_RCE::POST_RCE | Identifies possible RCE attempts in the post body. (MUST HAVE POST_BODY SCRIPT INSTALLED.) |
+| HTTP_RCE::POST_RCE | Identifies possible RCE attempts in the post body. (MUST HAVE A POST_BODY SCRIPT INSTALLED.) |
 | HTTP_RCE::COOKIE_RCE | Identifies possible RCE attempts in the cookie field. (NOT YET IMPLEMENTED.) |
 
 This package generates a notice log:
