@@ -5,4 +5,4 @@ script_dir = scripts
 version = 0.0.2
 depends =
   zeek >=3.0.0
-  https://github.com/nturley3/zeek-http-post-bodies >= 3.1.0
+  https://github.com/nturley3/zeek-http-post-bodies >=3.0.0
