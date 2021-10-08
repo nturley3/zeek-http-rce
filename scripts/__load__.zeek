@@ -1,6 +1,6 @@
-## Brigham Young University 
 ##
-@load packages/ces-soc-bro-http_post_bodies
+##
+@load packages/zeek-http-post-bodies
 @load base/frameworks/notice
 @load base/frameworks/sumstats
 @load base/protocols/http
