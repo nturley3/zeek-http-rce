@@ -1,4 +1,4 @@
-## Brigham Young University 
+##
 ##
 @load packages/zeek-http-post-bodies
 @load base/frameworks/notice
