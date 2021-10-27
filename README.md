@@ -26,7 +26,7 @@ See the [Zeek Package Manager Docs](https://docs.zeek.org/projects/package-manag
 
 No additional Zeek configuration is necessary for this module.
 
-A script logging the HTTP post body is required for examining post body data. A popular one is [Corelight's post_body script](https://github.com/corelight/log-add-http-post-bodies).
+A script logging the HTTP post body is required for examining post body data. See the zkg.meta file for suggestions, or just install [Corelight's post_body script](https://github.com/corelight/log-add-http-post-bodies).
 
 ## Generated Outputs
 
