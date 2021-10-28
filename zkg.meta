@@ -6,6 +6,6 @@ version = 0.0.3
 depends =
   zeek >=3.0.0
 suggests =
-  https://github.com/nturley3/zeek-http-post-bodies >=3.0.0
+  https://github.com/nturley3/zeek-http-post-bodies
   https://github.com/corelight/log-add-http-post-bodies
 
