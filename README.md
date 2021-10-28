@@ -3,7 +3,7 @@
 
 ## Purpose
 
-This module tags HTTP logs and generates a notice log when it detects possible remote code execution (RCE) attempts over HTTP, similar to how the Zeek SQL injection script works. It's based on common characteristics security analysts observed of RCE attempts of eploits or webshells. It is not based on CVEs, but rather on RCE behaviors found in the "Delivery" and "Installation" phases of the cyber kill chain.
+This module tags HTTP logs and generates a notice log when it detects possible remote code execution (RCE) attempts over HTTP, similar to how the Zeek SQL injection script works. It's based on common characteristics security analysts observed of RCE attempts of exploits or webshells. It is not based on CVEs, but rather on RCE behaviors found in the "Delivery" and "Installation" phases of the cyber kill chain.
 
 ## Installation/Upgrade
 
