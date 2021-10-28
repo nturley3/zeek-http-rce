@@ -1,8 +1,8 @@
 [package]
-description = Generates notice log when it detects potential remote code execution attempts over HTTP
+description = Tags HTTP log and generates notice log when it detects potential remote code execution attempts.
 tags = http
 script_dir = scripts
-version = 0.0.3
+version = 0.0.4
 depends =
   zeek >=3.0.0
 suggests =
