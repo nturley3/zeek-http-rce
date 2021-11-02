@@ -22,8 +22,8 @@ export {
         URI_RCE,
         ## Indicator of client post body-based RCE attack. 
         POST_RCE,
-        ## Indicator of a cookie based RCE attack. Not implemented yet.
-        COOKIE_RCE,
+        ## Indicator of a RCE attempt in HTTP headers.
+        HEADER_RCE,
     };
 
 
@@ -62,7 +62,7 @@ export {
 
     /(curl[[:space:]]+?\++?).*?((-o)|(--output))|(\>)/i | # Example: [#markup]=curl%20https:// . Look for some type of file write.
     /(curl_init[[:space:]]*?\+*?\()/i |
-    /(wget[[:space:]]+\++?)/i  &redef; # Need to make this more specific. # Example: [#markup]=wget -qO - http://
+    /(wget[[:space:]]+\++?)/i   # Need to make this more specific. # Example: [#markup]=wget -qO - http://
 
     #/(shell)/i | # Need to make this more specific. powershell? or shell.<extension> such as shell.php. Too many false positives with just "shell"
     #/(unsafe)/i # Need to make this more specific. Too many false positives. 
@@ -81,7 +81,7 @@ export {
         # raw.githubusercontent.com
         # etc
 
-     
+     &redef;
 
 
 }
@@ -171,6 +171,20 @@ event http_reply(c: connection, version: string, code: count, reason: string)
                 SumStats::observe("http.rce.attacker", [$host=c$id$orig_h], [$str=c$http$post_body]);
                 SumStats::observe("http.rce.victim",   [$host=c$id$resp_h], [$str=c$http$post_body]);
             }
+        }
+    }
+}
+
+event http_header(c: connection, is_orig: bool, name: string, value:string)
+{
+    # Efficiency technique.
+    if(check_only_local_net == F || (check_only_local_net == T && c$id$resp_h in Site::local_nets))
+    {
+        if (match_rce_pattern in name || match_rce_pattern in value)
+        {
+            add c$http$tags[HEADER_RCE];
+            SumStats::observe("http.rce.attacker", [$host=c$id$orig_h], [$str=name + ": " + value]);
+            SumStats::observe("http.rce.victim",   [$host=c$id$resp_h], [$str=name + ": " + value]);
         }
     }
 }
