@@ -62,7 +62,7 @@ export {
 
     /(curl[[:space:]]+?\++?).*?((-o)|(--output))|(\>)/i | # Example: [#markup]=curl%20https:// . Look for some type of file write.
     /(curl_init[[:space:]]*?\+*?\()/i |
-    /(wget[[:space:]]+\++?)/i  &redef; # Need to make this more specific. # Example: [#markup]=wget -qO - http://
+    /(wget[[:space:]]+\++?)/i   # Need to make this more specific. # Example: [#markup]=wget -qO - http://
 
     #/(shell)/i | # Need to make this more specific. powershell? or shell.<extension> such as shell.php. Too many false positives with just "shell"
     #/(unsafe)/i # Need to make this more specific. Too many false positives. 
@@ -81,7 +81,7 @@ export {
         # raw.githubusercontent.com
         # etc
 
-     
+     &redef;
 
 
 }
