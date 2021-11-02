@@ -18,7 +18,7 @@ Install the latest version through the Zeek package manager:
 To upgrade the package:
 
 	zkg refresh
-	zkg upgrade nturley3/zeek-http-rce
+	zkg upgrade zeek-http-rce
 
 See the [Zeek Package Manager Docs](https://docs.zeek.org/projects/package-manager/en/stable/quickstart.html) for more information.
 
