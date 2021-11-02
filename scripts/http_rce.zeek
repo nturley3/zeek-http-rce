@@ -61,7 +61,7 @@ export {
     # /(\%\>)/ | Too many false positives.
     /(curl[[:space:]]+)/i | # This produces many false positives. Need to make this more specific. # Example: [#markup]=curl%20https:// . Perhaps look for an accompanying domain, IP, or protocol afterwards?
     /(curl_init[[:space:]]*\()/i |
-    /(wget[[:space:]]+)/i | # Need to make this more specific. # Example: [#markup]=wget -qO - http://
+    /(wget[[:space:]]+)/i  # Need to make this more specific. # Example: [#markup]=wget -qO - http://
     #/(shell)/i | # Need to make this more specific. powershell? or shell.<extension> such as shell.php. Too many false positives with just "shell"
     #/(unsafe)/i # Need to make this more specific. Too many false positives. 
 
