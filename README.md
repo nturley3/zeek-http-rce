@@ -3,7 +3,7 @@
 
 ## Purpose
 
-This module tags HTTP logs and generates a notice log when it detects possible remote code execution (RCE) attempts over HTTP, similar to how the Zeek SQL injection script works. It's based on common characteristics security analysts observed of RCE attempts of eploits or webshells. It is not based on CVEs, but rather on RCE behaviors found in the "Delivery" and "Installation" phases of the cyber kill chain.
+This module tags HTTP logs and generates a notice log when it detects possible remote code execution (RCE) attempts over HTTP, similar to how the Zeek SQL injection script works. It's based on common characteristics security analysts observed of RCE attempts of exploits or webshells. It is not based on CVEs, but rather on RCE behaviors found in the "Delivery" and "Installation" phases of the cyber kill chain.
 
 ## Installation/Upgrade
 
@@ -26,7 +26,7 @@ See the [Zeek Package Manager Docs](https://docs.zeek.org/projects/package-manag
 
 No additional Zeek configuration is necessary for this module.
 
-A script logging the HTTP post body is required for examining post body data. See the zkg.meta file for suggestions, or just install [Corelight's post_body script](https://github.com/corelight/log-add-http-post-bodies).
+A script logging the HTTP post body is required for examining post body data. See the zkg.meta file for suggestions, or just accept the suggested package when using zkg to install.
 
 ## Generated Outputs
 
