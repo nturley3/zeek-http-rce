@@ -5,3 +5,4 @@
 @load base/frameworks/sumstats
 @load base/protocols/http
 @load ./http_rce.zeek
+@load ./config
