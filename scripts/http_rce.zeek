@@ -3,17 +3,16 @@
 # Possible future direction on how to improve this script:
     # Extract the URL, domain, or host used in the RCE for use in threat intelligence. 
 
+
 module HTTP_RCE;
 
 
 export {
     redef enum Notice::Type += {
-        ## Indicates that a host performing RCE attacks was
-        ## detected.
+        ## Indicates that a host performing RCE attacks was detected.
         RCE_Attacker,
         ## Indicates that a host was seen to have RCE attacks
-        ## against it.  This is tracked by IP address as opposed to
-        ## hostname.
+        ## against it.  This is tracked by IP address as opposed to hostname.
         RCE_Victim,
         
     };
@@ -27,32 +26,6 @@ export {
         COOKIE_RCE,
     };
 
-																																		 
-															
-
-    ## The interval may seem high and threshold low, but from what has been observed attempts can sporadically happen over a long period of time.
-    ## Unsure what impact this may have on Zeek though.
-
-    ## Defines the threshold that determines if an RCE attack
-    ## is ongoing based on the number of requests that appear to be
-    ## RCE attacks.
-    const rce_requests_threshold: double = 3.0 &redef;
-
-    ## Interval at which to watch for the
-    ## :zeek:id:`HTTP::rce_requests_threshold` variable to be crossed.
-    ## At the end of each interval the counter is reset.
-    const rce_requests_interval = 120min &redef;
-
-    ## Collecting samples will add extra data to the notice.
-    ## Disable sample collection by setting this value to 0.
-    const collect_RCE_samples = 3 &redef;
-
-    ## A regular expression is used to match RCEs.
-    ## Currently these are geared toward PHP.
-    ## Need to look at including C# and Java more.
-
-
-
 
     ## The idea with the included regex below is to focus on patterns that will almost always accompany an RCE.
     ## There are a many ways to obfuscate and many vulnerabilities to exploit.
@@ -60,8 +33,7 @@ export {
 
     ## Future things to think about:
     ## Create a confidence index or scoring system. If we see <?php that's higher confidence than a semi-colon or just the number 1337.
-    ## The plus + symbol represents a whitespace character. One technique observed is using a lot of whitespace characters, ie +++++++++++++++++++++++++eval++++++++++++++++++++(
-    ## According to regex101.com pcre2 tests, looking at the space and the "+" seperately (ie [[:space:]]*?\+*? ) vs a boolean (ie ([[:space:]]|\+)*? ) is more efficient
+
     const match_rce_pattern =
 
     /(eval[[:space:]]*?\+*?\()/i |
@@ -87,9 +59,11 @@ export {
     /(PHP Obfuscator)/ |
     # /(\?\>)/ | Too many false positives. Legitimate XML Ending
     # /(\%\>)/ | Too many false positives.
+
     /(curl[[:space:]]+?\++?).*?((-o)|(--output))|(\>)/i | # Example: [#markup]=curl%20https:// . Look for some type of file write.
     /(curl_init[[:space:]]*?\+*?\()/i |
     /(wget[[:space:]]+\++?)/i  &redef; # Need to make this more specific. # Example: [#markup]=wget -qO - http://
+
     #/(shell)/i | # Need to make this more specific. powershell? or shell.<extension> such as shell.php. Too many false positives with just "shell"
     #/(unsafe)/i # Need to make this more specific. Too many false positives. 
 
@@ -168,8 +142,8 @@ event zeek_init()
 event http_request(c: connection, method: string, original_URI: string,
            unescaped_URI: string, version: string)
 {
-    # Efficiency technique. RCE attempts against the local nets are more risky.
-    if(c$id$resp_h in Site::local_nets)
+    # Efficiency technique.
+    if(check_only_local_net == F || (check_only_local_net == T && c$id$resp_h in Site::local_nets))
     {
         # If RCE attempt is found, we want to tag the HTTP log and increment sumstats
         if ( match_rce_pattern in unescaped_URI )
@@ -182,13 +156,13 @@ event http_request(c: connection, method: string, original_URI: string,
 }
 event http_reply(c: connection, version: string, code: count, reason: string)
 {
-    # Efficiency technique. RCE attempts against the local nets are more risky.
-    if(c$id$resp_h in Site::local_nets)
+    # Efficiency technique.
+    if(check_only_local_net == F || (check_only_local_net == T && c$id$resp_h in Site::local_nets))
     {
         # Admins should already have a post_body script installed and running.
         # The post_body field should already be written to the log at this point.
         # For efficiency sake, we use an existing field so Zeek only processes the packets once.
-        # Typically the first 1024 bytes should be sufficient to detect most RCE attempts, although we don't have solid stats to back up that intuition claim.
+        # Typically the first 1024 bytes should be sufficient to detect most RCE attempts, although we don't have solid stats to back up that intuitive claim.
         if (c$http?$post_body)
         {
             if ( match_rce_pattern in c$http$post_body )
