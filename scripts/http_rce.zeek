@@ -22,8 +22,8 @@ export {
         URI_RCE,
         ## Indicator of client post body-based RCE attack. 
         POST_RCE,
-        ## Indicator of a cookie based RCE attack. Not implemented yet.
-        COOKIE_RCE,
+        ## Indicator of a RCE attempt in HTTP headers.
+        HEADER_RCE,
     };
 
 
@@ -171,6 +171,20 @@ event http_reply(c: connection, version: string, code: count, reason: string)
                 SumStats::observe("http.rce.attacker", [$host=c$id$orig_h], [$str=c$http$post_body]);
                 SumStats::observe("http.rce.victim",   [$host=c$id$resp_h], [$str=c$http$post_body]);
             }
+        }
+    }
+}
+
+event http_header(c: connection, is_orig: bool, original_name: string, name: string, value:string)
+{
+    # Efficiency technique.
+    if(check_only_local_net == F || (check_only_local_net == T && c$id$resp_h in Site::local_nets))
+    {
+        if (match_rce_pattern in original_name || match_rce_pattern in value)
+        {
+            add c$http$tags[HEADER_RCE];
+            SumStats::observe("http.rce.attacker", [$host=c$id$orig_h], [$str=original_name + ": " + value]);
+            SumStats::observe("http.rce.victim",   [$host=c$id$resp_h], [$str=original_name + ": " + value]);
         }
     }
 }
