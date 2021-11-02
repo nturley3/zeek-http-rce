@@ -180,7 +180,7 @@ event http_header(c: connection, is_orig: bool, name: string, value:string)
     # Efficiency technique.
     if(check_only_local_net == F || (check_only_local_net == T && c$id$resp_h in Site::local_nets))
     {
-        if (match_rce_pattern in original_name || match_rce_pattern in value)
+        if (match_rce_pattern in name || match_rce_pattern in value)
         {
             add c$http$tags[HEADER_RCE];
             SumStats::observe("http.rce.attacker", [$host=c$id$orig_h], [$str=name + ": " + value]);
