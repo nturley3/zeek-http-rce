@@ -19,11 +19,11 @@ export {
 
     redef enum HTTP::Tags += {
         ## Indicator of a URI-based RCE attack.
-        URI_RCE,
+        URI,
         ## Indicator of client post body-based RCE attack. 
-        POST_RCE,
+        POST,
         ## Indicator of a RCE attempt in HTTP headers.
-        HEADER_RCE,
+        HEADER,
     };
 
 
@@ -148,7 +148,7 @@ event http_request(c: connection, method: string, original_URI: string,
         # If RCE attempt is found, we want to tag the HTTP log and increment sumstats
         if ( match_rce_pattern in unescaped_URI )
         {
-            add c$http$tags[URI_RCE];
+            add c$http$tags[URI];
             SumStats::observe("http.rce.attacker", [$host=c$id$orig_h], [$str=original_URI]);
             SumStats::observe("http.rce.victim",   [$host=c$id$resp_h], [$str=original_URI]);
         }
@@ -167,7 +167,7 @@ event http_reply(c: connection, version: string, code: count, reason: string)
         {
             if ( match_rce_pattern in c$http$post_body )
             {
-                add c$http$tags[POST_RCE];
+                add c$http$tags[POST];
                 SumStats::observe("http.rce.attacker", [$host=c$id$orig_h], [$str=c$http$post_body]);
                 SumStats::observe("http.rce.victim",   [$host=c$id$resp_h], [$str=c$http$post_body]);
             }
@@ -182,7 +182,7 @@ event http_header(c: connection, is_orig: bool, name: string, value:string)
     {
         if (match_rce_pattern in name || match_rce_pattern in value)
         {
-            add c$http$tags[HEADER_RCE];
+            add c$http$tags[HEADER];
             SumStats::observe("http.rce.attacker", [$host=c$id$orig_h], [$str=name + ": " + value]);
             SumStats::observe("http.rce.victim",   [$host=c$id$resp_h], [$str=name + ": " + value]);
         }
