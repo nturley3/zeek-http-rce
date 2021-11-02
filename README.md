@@ -10,12 +10,12 @@ This module tags HTTP logs and generates a notice log when it detects possible r
 This script was written and tested using Zeek 3.0.11.
 
 
-This is easiest to install through the Zeek package manager:
+Install the latest version through the Zeek package manager:
 
 	zkg refresh
-	zkg install nturley3/zeek-http-rce
+	zkg install https://github.com/nturley3/zeek-http-rce
 
-If you need to upgrade the package:
+To upgrade the package:
 
 	zkg refresh
 	zkg upgrade nturley3/zeek-http-rce
