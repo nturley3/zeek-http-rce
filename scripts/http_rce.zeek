@@ -178,7 +178,8 @@ event http_reply(c: connection, version: string, code: count, reason: string)
 event http_header(c: connection, is_orig: bool, name: string, value:string)
 {
     # Efficiency technique.
-    if(check_only_local_net == F || (check_only_local_net == T && c$id$resp_h in Site::local_nets))
+    # It's unlikely a server on the local net is sending RCE headers, so ignore those for efficiency sake.
+    if(check_only_local_net == F || (check_only_local_net == T && c$id$resp_h in Site::local_nets && is_orig == T))
     {
         if (match_rce_pattern in name || match_rce_pattern in value)
         {
