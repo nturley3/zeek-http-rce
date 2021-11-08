@@ -34,9 +34,9 @@ This package adds a tag to the HTTP log:
 
 | `tags` Field Value | Description |
 | ----- | ----- |
-| HTTP_RCE::URI | Identifies possible RCE attempts in the URI. |
-| HTTP_RCE::POST | Identifies possible RCE attempts in the post body. (MUST HAVE A POST_BODY SCRIPT INSTALLED.) |
-| HTTP_RCE::HEADER | Identifies possible RCE attempts in the HTTP headers.|
+| HTTP_RCE::URI_RCE | Identifies possible RCE attempts in the URI. |
+| HTTP_RCE::POST_RCE | Identifies possible RCE attempts in the post body. (MUST HAVE A POST_BODY SCRIPT INSTALLED.) |
+| HTTP_RCE::HEADER_RCE | Identifies possible RCE attempts in the HTTP headers.|
 
 This package generates a notice log:
 
