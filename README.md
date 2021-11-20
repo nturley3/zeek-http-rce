@@ -7,7 +7,7 @@ This module tags HTTP logs and generates a notice log when it detects possible r
 
 ## Installation/Upgrade
 
-This script was written and tested using Zeek 3.0.11.
+This script was written and tested using Zeek 3.0.11 and 4.0.3.
 
 
 Install the latest version through the Zeek package manager:
