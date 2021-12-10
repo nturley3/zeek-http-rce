@@ -57,6 +57,7 @@ export {
     /(str_replace[[:space:]]*?\+*?\()/i |
     /(file_get_contents[[:space:]]*?\+*?\()/i | #Example: $code = file_get_contents('https://pastebin[.]com/raw/63LjCNAs');
     /(PHP Obfuscator)/ |
+    /\$jndi:/i | # Based on https://nakedsecurity.sophos.com/2021/12/10/log4shell-java-vulnerability-how-to-safeguard-your-servers/
     # /(\?\>)/ | Too many false positives. Legitimate XML Ending
     # /(\%\>)/ | Too many false positives.
 
