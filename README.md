@@ -15,6 +15,8 @@ Install the latest version through the Zeek package manager:
 	zkg refresh
 	zkg install https://github.com/nturley3/zeek-http-rce
 
+**Note:** A script logging the HTTP post body is required for examining post body data. There are two suggested packages when running the above command. You only should install **ONE** package, not both. The two packages will conflict and add a performance hit to Zeek. To ignore the suggested packages, include the `--nosuggestions` flag.
+
 To upgrade the package:
 
 	zkg refresh
@@ -26,7 +28,7 @@ See the [Zeek Package Manager Docs](https://docs.zeek.org/projects/package-manag
 
 No additional Zeek configuration is necessary for this module.
 
-A script logging the HTTP post body is required for examining post body data. See the zkg.meta file for suggestions, or just accept the suggested package when using zkg to install.
+ See the zkg.meta file for suggestions, or accept one of the suggested package when using zkg to install. Do not install both packages.
 
 ## Generated Outputs
 
